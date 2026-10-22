@@ -32,7 +32,7 @@ Vertical features belong in optional modules.
 | --- | --- |
 | .NET 10 Debug solution build | Passed, 0 errors; warnings include upstream package advisories and ImageSharp licensing notice |
 | .NET 10 Release core and generated runtime suite | Passed, 29/29 tests |
-| Standalone Studio runtime | Failed initial boot: Umbraco reports SQLite `unable to open database file`; do not treat the host as ready yet |
+| Standalone Studio runtime | Local SQLite path failure recorded; Docker now uses its own SQL Server service to avoid the container filesystem path issue. Verify a clean Compose boot before treating the host as ready. |
 | ChatGPT account/inference | Not attempted; no account authorization performed |
 | Docker image | Not verified after extraction |
 

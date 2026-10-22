@@ -13,9 +13,6 @@ builder.Services.AddScoped<SiteKitDataImportService>();
 var configuredDataRoot = builder.Configuration["SiteKit:DataPath"];
 var dataRoot = Path.GetFullPath(configuredDataRoot ?? Path.Combine(builder.Environment.ContentRootPath, "data", "sitekit"));
 Directory.CreateDirectory(dataRoot);
-var umbracoDatabaseDirectory = Path.Combine(builder.Environment.ContentRootPath, "umbraco", "Data");
-Directory.CreateDirectory(umbracoDatabaseDirectory);
-builder.Configuration["ConnectionStrings:umbracoDbDSN"] = $"Data Source={Path.Combine(umbracoDatabaseDirectory, "SiteKit.sqlite.db")};Cache=Shared;Foreign Keys=True;Pooling=True";
 
 builder.Services.AddSingleton<ISiteKitComponentRegistry>(_ => new JsonSiteKitComponentRegistry(Path.Combine(dataRoot, "components")));
 builder.Services.AddSingleton<ISiteKitProjectRegistry>(_ => new JsonSiteKitProjectRegistry(Path.Combine(dataRoot, "projects")));

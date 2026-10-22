@@ -1,10 +1,29 @@
 services:
+  sitekit-database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${SITEKIT_DB_PASSWORD:?Set SITEKIT_DB_PASSWORD}
+    ports:
+      - "14330:1433"
+    volumes:
+      - sitekit_sql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
   sitekit-studio:
     build:
       context: .
       dockerfile: src/SiteKit.Studio/Dockerfile
     environment:
       ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__umbracoDbDSN: Server=sitekit-database;Database=SiteKitCms;User Id=sa;Password=${SITEKIT_DB_PASSWORD:?Set SITEKIT_DB_PASSWORD};TrustServerCertificate=true;MultipleActiveResultSets=true
+      ConnectionStrings__umbracoDbDSN_ProviderName: Microsoft.Data.SqlClient
       SiteKit__DataPath: /app/data/sitekit
       SiteKit__GeneratedProjectsPath: /app/generated-projects
       SiteKit__AdminEmail: ${SITEKIT_ADMIN_EMAIL:?Set SITEKIT_ADMIN_EMAIL}
@@ -15,8 +34,12 @@ services:
       - sitekit_data:/app/data
       - sitekit_generated:/app/generated-projects
       - sitekit_cms:/app/umbraco/Data
+    depends_on:
+      sitekit-database:
+        condition: service_healthy
 
 volumes:
+  sitekit_sql_data:
   sitekit_data:
   sitekit_generated:
   sitekit_cms:

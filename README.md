@@ -83,8 +83,9 @@ docs/                    Architecture, setup and implementation evidence
 The hotel POC, booking engine, hotel exports, and hotel-specific database setup
 are deliberately excluded from this repository. The Studio host initializes
 Umbraco independently and uses a SiteKit-owned local administrator session and
-JSON stores. A clean SQLite-backed Umbraco first boot is still being debugged;
-see the implementation ledger for verified behavior and open gaps.
+JSON stores. Local development uses SQLite; the Docker stack uses an isolated,
+persistent SQL Server database. See the implementation ledger for verified
+behavior and open gaps.
 
 ## Start with the core and local agent
 
