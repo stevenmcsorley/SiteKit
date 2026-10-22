@@ -1,0 +1,14 @@
+.git
+.github
+.playwright-cli
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+generated-projects
+/data
+**/umbraco/Data/
+**/umbraco/Logs/
+**/umbraco/Temp/
+.env
+.env.*

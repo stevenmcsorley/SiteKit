@@ -1,0 +1,11 @@
+@{
+  Layout = null;
+  ViewData["Title"] = "Sign in";
+}
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Sign in · SiteKit</title><link rel="stylesheet" href="~/css/output.css"/>
+<style>body{margin:0;background:#f5f7fb;color:#162231;font:16px/1.5 Inter,"Segoe UI",system-ui,sans-serif}.login{min-height:100vh;display:grid;place-items:center;padding:1.5rem}.card{width:min(100%,420px);padding:2rem;background:white;border:1px solid #e1e7ee;border-radius:18px;box-shadow:0 20px 70px #15263812}.mark{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#19a79b,#176b82);color:#fff;font-weight:850}.card h1{margin:1.3rem 0 .2rem;letter-spacing:-.04em}.muted{color:#637184}.field{display:grid;gap:.4rem;margin:1rem 0}.field input{padding:.8rem;border:1px solid #cad4de;border-radius:9px;font:inherit}.field input:focus-visible,button:focus-visible{outline:3px solid #59c5c7;outline-offset:2px}button{width:100%;margin-top:.5rem;padding:.85rem;border:0;border-radius:9px;background:#087f8c;color:white;font:inherit;font-weight:700;cursor:pointer}.error{color:#a22335}</style></head>
+<body><main class="login"><section class="card"><div class="mark" aria-hidden="true">SK</div><h1>Welcome to SiteKit</h1><p class="muted">Sign in to open your local Studio.</p>
+@if (!ViewData.ModelState.IsValid) { <p class="error" role="alert">@string.Join(" ", ViewData.ModelState.Values.SelectMany(value => value.Errors).Select(error => error.ErrorMessage))</p> }
+<form method="post" action="/login"><label class="field">Email<input name="email" type="email" autocomplete="username" required/></label><label class="field">Password<input name="password" type="password" autocomplete="current-password" required/></label><button type="submit">Sign in</button></form>
+<p class="muted">Configure the initial administrator with <code>SiteKit__AdminEmail</code> and <code>SiteKit__AdminPassword</code>.</p></section></main></body></html>

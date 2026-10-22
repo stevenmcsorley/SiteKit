@@ -1,0 +1,35 @@
+name: SiteKit build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore solution
+        run: dotnet restore SiteKit.sln
+      - name: Test core contracts and generated runtime
+        run: dotnet test tests/SiteKit.Core.Tests/SiteKit.Core.Tests.csproj --no-restore --configuration Release
+      - name: Test narrow ImageSharp advisory policy
+        run: python scripts/test_check_nuget_vulnerabilities.py
+      - name: Check transitive package advisories
+        run: |
+          dotnet list src/SiteKit.Studio/SiteKit.Studio.csproj package --vulnerable --include-transitive --format json > "$RUNNER_TEMP/sitekit-vulnerability-report.json"
+          python scripts/check_nuget_vulnerabilities.py "$RUNNER_TEMP/sitekit-vulnerability-report.json"
+      - name: Build SiteKit
+        env:
+          SIXLABORS_LICENSE_KEY: ${{ secrets.SIXLABORS_LICENSE_KEY }}
+        run: |
+          if [[ -n "$SIXLABORS_LICENSE_KEY" ]]; then
+            dotnet build SiteKit.sln --no-restore --configuration Release -p:SixLaborsLicenseKey="$SIXLABORS_LICENSE_KEY"
+          else
+            dotnet build SiteKit.sln --no-restore --configuration Debug
+          fi
